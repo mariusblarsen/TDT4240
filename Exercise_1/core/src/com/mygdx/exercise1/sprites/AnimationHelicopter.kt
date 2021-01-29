@@ -1,11 +1,9 @@
 package com.mygdx.exercise1.sprites
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector3
-import javax.xml.soap.Text
 import kotlin.random.Random
 
 class AnimationHelicopter(x : Float, y : Float) {
@@ -14,15 +12,22 @@ class AnimationHelicopter(x : Float, y : Float) {
     private var headingLeft : Boolean = true
     private var animation: Animation = Animation()
     private var heliSprite : Sprite = Sprite(animation.getFrame())
+    private var hitbox : Rectangle = Rectangle(position.x, position.y,
+            heliSprite.texture.width.toFloat(), heliSprite.texture.height.toFloat())
 
     fun update(dt: Float){
         animation.update(dt)
         heliSprite.texture = animation.getFrame()
         checkBorder()
+        updatePosition(dt)
+        setHeading()
+    }
+    private fun updatePosition(dt: Float){
         velocity.scl(dt)
         position.add(velocity.x, velocity.y, 0F)
         velocity.scl(1/dt)
-        setHeading()
+        hitbox.x = position.x
+        hitbox.y = position.y
     }
 
     private fun checkBorder(){
@@ -59,6 +64,10 @@ class AnimationHelicopter(x : Float, y : Float) {
         return position
     }
 
+    fun getVelocity(): Vector3{
+        return velocity
+    }
+
     fun fly(x: Float, y: Float){
         velocity.set(x, y, 0F)
     }
@@ -68,7 +77,11 @@ class AnimationHelicopter(x : Float, y : Float) {
     }
 
     fun dispose(){
+        heliSprite.texture.dispose()
+    }
 
+    fun getHitbox() : Rectangle{
+        return hitbox
     }
 
 }
