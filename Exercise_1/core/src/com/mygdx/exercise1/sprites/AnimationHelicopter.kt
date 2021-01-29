@@ -17,7 +17,7 @@ class AnimationHelicopter(x : Float, y : Float) {
 
     fun update(dt: Float){
         animation.update(dt)
-        heliSprite = Sprite(animation.getFrame())
+        heliSprite.texture = animation.getFrame()
         checkBorder()
         velocity.scl(dt)
         position.add(velocity.x, velocity.y, 0F)
