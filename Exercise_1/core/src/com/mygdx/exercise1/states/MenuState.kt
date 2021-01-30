@@ -3,46 +3,55 @@ package com.mygdx.exercise1.states
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.mygdx.exercise1.sprites.MenuButton
+import com.badlogic.gdx.math.Rectangle
 
 class MenuState(gsm: GameStateManager) : State(gsm) {
-    private var taskOneBtn : Texture = Texture("task1btn.png")
-    private var taskTwoBtn : Texture = Texture("task2btn.png")
-    private var taskThreeBtn : Texture = Texture("task3btn.png")
+    private var taskOneBtn : MenuButton = MenuButton(Gdx.graphics.width/(2*5).toFloat(),Gdx.graphics.height/4.toFloat(),
+            "task1btn.png", BounceState(gsm))
+    private var taskTwoBtn : MenuButton = MenuButton(2*Gdx.graphics.width/(2*5).toFloat(),Gdx.graphics.height/4.toFloat(),
+            "task2btn.png", MoveState(gsm))
+    private var taskThreeBtn : MenuButton = MenuButton(3*Gdx.graphics.width/(2*5).toFloat(),Gdx.graphics.height/4.toFloat(),
+            "task3btn.png", AnimationState(gsm))
+
+    init {
+        cam.setToOrtho(false,
+                Gdx.graphics.width / 2.toFloat(),
+                Gdx.graphics.height / 2.toFloat())
+    }
+
+
     override fun update(dt: Float) {
         handleInput()
     }
 
     override fun render(sb: SpriteBatch) {
-        sb.begin()
-        sb.draw(taskOneBtn,
-                600 - (taskOneBtn.width / 2).toFloat(),
-                Gdx.graphics.height/2.toFloat())
-        sb.draw(taskTwoBtn,
-                1200 - (taskOneBtn.width / 2).toFloat(),
-                Gdx.graphics.height / 2.toFloat())
-        sb.draw(taskThreeBtn,
-                1800 - (taskOneBtn.width / 2).toFloat(),
-                Gdx.graphics.height / 2.toFloat())
-        sb.end()
+        sb.projectionMatrix = cam.combined
+        taskOneBtn.draw(sb)
+        taskTwoBtn.draw(sb)
+        taskThreeBtn.draw(sb)
     }
 
     override fun handleInput() {
-        val posX = Gdx.input.x
         if (Gdx.input.justTouched()){
+            val clicksize = 50F
+            val posY = Gdx.graphics.height - Gdx.input.y
+            val click = Rectangle(Gdx.input.x.toFloat()/2 - clicksize/2,
+                    posY/2 - clicksize/2,
+                    clicksize, clicksize)
             when{
-                posX > 1800 -> gsm.set(AnimationState(gsm))
-                posX > 1200 -> gsm.set(MoveState(gsm))
-                else -> {
-                    gsm.set(BounceState(gsm))
-                }
-
+                click.overlaps(taskOneBtn.getHitbox()) -> taskOneBtn.clicked(gsm)
+                click.overlaps(taskTwoBtn.getHitbox()) -> taskTwoBtn.clicked(gsm)
+                click.overlaps(taskThreeBtn.getHitbox()) -> taskThreeBtn.clicked(gsm)
+                else -> {return}
             }
             dispose()
         }
-
     }
 
     override fun dispose() {
         taskOneBtn.dispose()
+        taskTwoBtn.dispose()
+        taskThreeBtn.dispose()
     }
 }
