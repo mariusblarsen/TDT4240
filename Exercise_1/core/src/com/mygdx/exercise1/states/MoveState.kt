@@ -31,12 +31,17 @@ class MoveState(gsm : GameStateManager) : State(gsm) {
                 "X:${heli.getPosition().x} \nY:${heli.getPosition().y}",
                 10F,
                 startY*2)
+        font.draw(sb, "Exit", 20F, 20F)
         sb.end()
     }
 
     override fun handleInput() {
         if (Gdx.input.justTouched()){
             heli.setVelocity(Gdx.input.x.toFloat(), Gdx.input.y.toFloat())
+            if (Gdx.input.x <= 100 && Gdx.input.y >= Gdx.graphics.height-100){
+                gsm.set(MenuState(gsm))
+                dispose()
+            }
         }
     }
 
