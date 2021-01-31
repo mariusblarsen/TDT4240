@@ -1,7 +1,6 @@
 package com.mygdx.exercise1.states
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.mygdx.exercise1.sprites.MenuButton
 import com.badlogic.gdx.math.Rectangle
@@ -13,6 +12,8 @@ class MenuState(gsm: GameStateManager) : State(gsm) {
             "task2btn.png", MoveState(gsm))
     private var taskThreeBtn : MenuButton = MenuButton(3*Gdx.graphics.width/(2*5).toFloat(),Gdx.graphics.height/4.toFloat(),
             "task3btn.png", AnimationState(gsm))
+    private var taskFourBtn : MenuButton = MenuButton(4*Gdx.graphics.width/(2*5).toFloat(),Gdx.graphics.height/4.toFloat(),
+            "task4btn.png", PingPongState(gsm))
 
     init {
         cam.setToOrtho(false,
@@ -30,6 +31,7 @@ class MenuState(gsm: GameStateManager) : State(gsm) {
         taskOneBtn.draw(sb)
         taskTwoBtn.draw(sb)
         taskThreeBtn.draw(sb)
+        taskFourBtn.draw(sb)
     }
 
     override fun handleInput() {
@@ -43,6 +45,7 @@ class MenuState(gsm: GameStateManager) : State(gsm) {
                 click.overlaps(taskOneBtn.getHitbox()) -> taskOneBtn.clicked(gsm)
                 click.overlaps(taskTwoBtn.getHitbox()) -> taskTwoBtn.clicked(gsm)
                 click.overlaps(taskThreeBtn.getHitbox()) -> taskThreeBtn.clicked(gsm)
+                click.overlaps(taskFourBtn.getHitbox()) -> taskFourBtn.clicked(gsm)
                 else -> {return}
             }
             dispose()
@@ -53,5 +56,6 @@ class MenuState(gsm: GameStateManager) : State(gsm) {
         taskOneBtn.dispose()
         taskTwoBtn.dispose()
         taskThreeBtn.dispose()
+        taskFourBtn.dispose()
     }
 }
